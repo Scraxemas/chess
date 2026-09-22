@@ -1,6 +1,12 @@
 import { ChessGame, type Color } from './chess/game';
 import { AI_THINK_MS, chooseWeakMove } from './chess/ai';
 import { BoardView } from './ui/boardView';
+import {
+  applyThemeChrome,
+  loadTheme,
+  saveTheme,
+  type ThemeId,
+} from './ui/themes';
 import './ui/styles.css';
 
 type PlayMode = 'local' | 'ai';
@@ -15,6 +21,7 @@ const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const modeSelect = document.getElementById('mode-select') as HTMLSelectElement;
 const colorSelect = document.getElementById('color-select') as HTMLSelectElement;
 const colorLabel = document.getElementById('color-label') as HTMLLabelElement;
+const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
 
 let board!: BoardView;
 
@@ -229,6 +236,19 @@ colorSelect.addEventListener('change', () => {
   refreshChrome();
   scheduleAiMove();
 });
+
+themeSelect.addEventListener('change', () => {
+  const theme: ThemeId =
+    themeSelect.value === 'pokemon' ? 'pokemon' : 'classic';
+  saveTheme(theme);
+  board.setTheme(theme);
+  refreshChrome();
+});
+
+const initialTheme = loadTheme();
+themeSelect.value = initialTheme;
+applyThemeChrome(initialTheme);
+board.setTheme(initialTheme);
 
 updateModeUi();
 board.render();

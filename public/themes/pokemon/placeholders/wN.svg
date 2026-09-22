@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Rapidash">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="30%"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#ea580c"/></radialGradient>
+  </defs>
+  <ellipse cx="32" cy="34" rx="24" ry="22" fill="url(#g)" stroke="#9a3412" stroke-width="2.5"/>
+  <path d="M20 18 Q32 4 44 18 Q38 28 32 22 Q26 28 20 18Z" fill="#fef3c7"/>
+  <text x="32" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#9a3412">RAP</text>
+  <text x="32" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="#7c2d12">Rapidash</text>
+</svg>

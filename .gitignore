@@ -2,3 +2,6 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# Optional local Trozei-style PNGs — never commit Nintendo/TPC sprites
+public/themes/pokemon/trozei/*.png

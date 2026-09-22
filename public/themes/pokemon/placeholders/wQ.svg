@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Delphox">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="30%"><stop offset="0%" stop-color="#fdba74"/><stop offset="100%" stop-color="#c2410c"/></radialGradient>
+  </defs>
+  <rect x="8" y="8" width="48" height="48" rx="12" fill="url(#g)" stroke="#7c2d12" stroke-width="2.5"/>
+  <ellipse cx="32" cy="28" rx="14" ry="16" fill="#fed7aa" opacity="0.9"/>
+  <text x="32" y="36" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#7c2d12">DEL</text>
+  <text x="32" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="#fff">Delphox</text>
+</svg>

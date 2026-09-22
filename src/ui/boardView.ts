@@ -1,23 +1,19 @@
 import type { Move, Square } from 'chess.js';
 import type { ChessGame, Color, PieceSymbol } from '../chess/game';
+import {
+  applyThemeChrome,
+  classicPieceUrl,
+  pieceAlt,
+  pokemonPlaceholderUrl,
+  pokemonSpecies,
+  pokemonTrozeiUrl,
+  type ThemeId,
+} from './themes';
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
 const RANKS = ['8', '7', '6', '5', '4', '3', '2', '1'] as const;
 
 const PROMO_PIECES: PieceSymbol[] = ['q', 'r', 'b', 'n'];
-
-function pieceSrc(color: Color, type: PieceSymbol): string {
-  const prefix = color === 'w' ? 'w' : 'b';
-  const map: Record<PieceSymbol, string> = {
-    p: 'P',
-    n: 'N',
-    b: 'B',
-    r: 'R',
-    q: 'Q',
-    k: 'K',
-  };
-  return `/pieces/${prefix}${map[type]}.svg`;
-}
 
 export type BoardViewCallbacks = {
   onMoveCommitted: () => void;
@@ -39,6 +35,7 @@ export class BoardView {
   private interactionLocked = false;
   /** When false, human clicks are ignored (AI turn / thinking). */
   private humanInputEnabled = true;
+  private theme: ThemeId = 'classic';
 
   constructor(
     root: HTMLElement,
@@ -50,7 +47,7 @@ export class BoardView {
     this.callbacks = callbacks;
 
     this.boardEl = document.createElement('div');
-    this.boardEl.className = 'board';
+    this.boardEl.className = 'board theme-classic';
     this.boardEl.setAttribute('role', 'grid');
     this.boardEl.setAttribute('aria-label', 'Chess board');
 
@@ -70,6 +67,21 @@ export class BoardView {
     this.boardEl.addEventListener('click', (e) => this.onBoardClick(e));
   }
 
+  setTheme(theme: ThemeId): void {
+    this.theme = theme;
+    applyThemeChrome(theme, this.boardEl);
+    this.render();
+    // Refresh promotion choices with new art if picker is open.
+    if (this.pendingPromo) {
+      const { from, to } = this.pendingPromo;
+      this.openPromotion(from, to);
+    }
+  }
+
+  getTheme(): ThemeId {
+    return this.theme;
+  }
+
   /** Enable/disable human board interaction (used during AI turns). */
   setHumanInputEnabled(enabled: boolean): void {
     this.humanInputEnabled = enabled;
@@ -86,6 +98,33 @@ export class BoardView {
     return this.humanInputEnabled;
   }
 
+  private attachPieceImage(
+    img: HTMLImageElement,
+    color: Color,
+    type: PieceSymbol,
+  ): void {
+    const alt = pieceAlt(this.theme, color, type);
+    img.alt = alt;
+    img.title =
+      this.theme === 'pokemon' ? pokemonSpecies(color, type) : alt;
+    img.setAttribute('aria-label', alt);
+    img.draggable = false;
+    img.className = 'piece';
+
+    if (this.theme === 'classic') {
+      img.src = classicPieceUrl(color, type);
+      return;
+    }
+
+    const placeholder = pokemonPlaceholderUrl(color, type);
+    const trozei = pokemonTrozeiUrl(color, type);
+    img.src = trozei;
+    img.onerror = () => {
+      img.onerror = null;
+      img.src = placeholder;
+    };
+  }
+
   render(): void {
     const board = this.game.board();
     const last = this.game.lastMove();
@@ -93,6 +132,7 @@ export class BoardView {
 
     this.boardEl.replaceChildren();
     this.boardEl.classList.toggle('input-disabled', !this.humanInputEnabled);
+    applyThemeChrome(this.theme, this.boardEl);
 
     for (let r = 0; r < 8; r++) {
       for (let f = 0; f < 8; f++) {
@@ -121,10 +161,7 @@ export class BoardView {
 
         if (cell) {
           const img = document.createElement('img');
-          img.className = 'piece';
-          img.src = pieceSrc(cell.color, cell.type);
-          img.alt = `${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`;
-          img.draggable = false;
+          this.attachPieceImage(img, cell.color, cell.type);
           sqEl.appendChild(img);
         }
 
@@ -236,10 +273,13 @@ export class BoardView {
     for (const type of PROMO_PIECES) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.title = type.toUpperCase();
+      const label =
+        this.theme === 'pokemon'
+          ? pokemonSpecies(turn, type)
+          : type.toUpperCase();
+      btn.title = label;
       const img = document.createElement('img');
-      img.src = pieceSrc(turn, type);
-      img.alt = type;
+      this.attachPieceImage(img, turn, type);
       btn.appendChild(img);
       btn.addEventListener('click', () => this.commitPromotion(type));
       this.promoChoices.appendChild(btn);

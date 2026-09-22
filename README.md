@@ -9,6 +9,7 @@ A playable browser chess game built with vanilla HTML, CSS, and TypeScript (Vite
 - Blocking promotion overlay (queen / rook / bishop / knight)
 - Status line, New Game, Undo, and SAN move history
 - **Local 2-player** or **Play vs AI** (weak heuristic — not Stockfish)
+- **Theme** switch: Classic pieces or **Pokémon** (Fire vs Water armies) with original placeholders; optional local Trozei-style PNG drop-in (gitignored)
 
 ## Run locally
 
@@ -23,6 +24,38 @@ Build for production:
 npm run build
 npm run preview
 ```
+
+
+## Themes
+
+Use the **Theme** control (next to Mode):
+
+| Theme | Pieces |
+|-------|--------|
+| **Classic** | Standard chess SVGs (`public/pieces/`) |
+| **Pokémon** | Fire (White) vs Water (Black) — see roster below |
+
+Preference is saved in `localStorage` (`chess-theme`).
+
+### Pokémon roster
+
+| Role | White (Fire) | Black (Water) |
+|------|--------------|---------------|
+| K | Charizard | Blastoise |
+| Q | Delphox | Primarina |
+| R | Coalossal | Drednaw |
+| B | Armarouge | Samurott (Unova) |
+| N | Rapidash | Kingdra |
+| P | Charcadet | Froakie |
+
+Back ranks: **R N B Q K B N R** with those species.
+
+### Optional Trozei-style assets
+
+The app tries `/themes/pokemon/trozei/{wK|wQ|…|bP}.png` first, then falls back to original placeholders in `public/themes/pokemon/placeholders/`.
+
+1. Drop PNGs into `public/themes/pokemon/trozei/` using the filenames listed in `public/themes/pokemon/README.md`.
+2. Those PNGs are **gitignored** — do not commit Nintendo / TPC artwork.
 
 ## Play vs AI
 
@@ -46,7 +79,8 @@ Undo removes a **full ply pair** when possible: the AI’s last move and your pr
 - `src/chess/game.ts` — thin wrapper around chess.js (single source of truth for position)
 - `src/chess/ai.ts` — weak move chooser
 - `src/ui/boardView.ts` — custom board render + click interaction (no chessground)
-- Piece artwork lives in `public/pieces/`
+- `src/ui/themes.ts` — Classic / Pokémon piece URL resolvers + board chrome
+- Piece artwork: `public/pieces/` (classic); `public/themes/pokemon/placeholders/` (Pokémon)
 
 ## Credits & licenses
 
@@ -63,3 +97,9 @@ this project chooses BSD only).
 
 Copyright (c) 2006, Colin M. L. Burnett  
 All rights reserved.
+
+### Pokémon theme placeholders
+
+Original type-colored SVG tokens in this repository (not Nintendo / TPC sprites).
+Optional Trozei-style PNGs are for **local use only** and must not be committed.
+

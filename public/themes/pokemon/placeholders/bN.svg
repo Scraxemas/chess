@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kingdra">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="30%"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#0e7490"/></radialGradient>
+  </defs>
+  <ellipse cx="32" cy="34" rx="24" ry="22" fill="url(#g)" stroke="#164e63" stroke-width="2.5"/>
+  <path d="M40 16 Q52 28 44 40" fill="none" stroke="#a5f3fc" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="26" cy="28" r="4" fill="#ecfeff"/>
+  <text x="32" y="42" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#083344">KIN</text>
+  <text x="32" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="#cffafe">Kingdra</text>
+</svg>

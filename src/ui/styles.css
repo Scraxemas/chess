@@ -306,3 +306,35 @@ button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* —— Pokémon theme board chrome (Fire sand vs Water slate) —— */
+:root[data-theme='pokemon'] {
+  --light: #f3e0c2;
+  --dark: #5b7c99;
+  --selected: rgba(251, 191, 36, 0.55);
+  --last-move: rgba(56, 189, 248, 0.35);
+  --check: rgba(239, 68, 68, 0.5);
+  --bg: #f0f4f8;
+  --border: #94a3b8;
+}
+
+.board.theme-pokemon {
+  border-color: #334155;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25), 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+.board.theme-pokemon .square.light {
+  background: linear-gradient(145deg, #f8e7c9 0%, #ecd4a8 100%);
+}
+
+.board.theme-pokemon .square.dark {
+  background: linear-gradient(145deg, #6b8eab 0%, #4a6d8c 100%);
+}
+
+.board.theme-pokemon .legal-dot::after {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.board.theme-pokemon .legal-capture::after {
+  box-shadow: inset 0 0 0 3px rgba(251, 191, 36, 0.75);
+}
