@@ -203,7 +203,8 @@ btnUndo.addEventListener('click', () => {
   board.clearSelection();
   board.render();
   refreshChrome();
-  // Do not auto-trigger AI after undo; human is to move (or local).
+  // If undo left AI to move (e.g. human-as-Black undid the opening AI ply), reschedule.
+  scheduleAiMove();
 });
 
 modeSelect.addEventListener('change', () => {
