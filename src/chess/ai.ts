@@ -14,12 +14,34 @@ const MATERIAL: Record<PieceSymbol, number> = {
 const CHECK_BONUS = 40;
 const PROMO_BONUS = 800;
 
+export type AiDifficulty = 'weak' | 'master';
+
+export const AI_DIFFICULTY_STORAGE_KEY = 'chess-ai-difficulty';
+
 export type AiMove = {
   from: Square;
   to: Square;
-  /** Always queen when set. */
-  promotion?: 'q';
+  /** Weak AI always queens; Master uses Stockfish’s choice. */
+  promotion?: 'q' | 'r' | 'b' | 'n';
 };
+
+export function loadAiDifficulty(): AiDifficulty {
+  try {
+    const v = localStorage.getItem(AI_DIFFICULTY_STORAGE_KEY);
+    if (v === 'master' || v === 'weak') return v;
+  } catch {
+    // private mode / unavailable
+  }
+  return 'weak';
+}
+
+export function saveAiDifficulty(d: AiDifficulty): void {
+  try {
+    localStorage.setItem(AI_DIFFICULTY_STORAGE_KEY, d);
+  } catch {
+    // ignore
+  }
+}
 
 /**
  * Pick a weak move: score each legal move with capture/check/promo bonuses,
@@ -83,5 +105,5 @@ function scoreMove(game: ChessGame, move: Move): number {
   return score;
 }
 
-/** Delay before the AI commits a move (ms). */
+/** Delay before the weak AI commits a move (ms). */
 export const AI_THINK_MS = 400;

@@ -1,5 +1,13 @@
 import { ChessGame, type Color } from './chess/game';
-import { AI_THINK_MS, chooseWeakMove } from './chess/ai';
+import {
+  AI_THINK_MS,
+  chooseWeakMove,
+  loadAiDifficulty,
+  saveAiDifficulty,
+  type AiDifficulty,
+  type AiMove,
+} from './chess/ai';
+import { StockfishEngine } from './chess/stockfishEngine';
 import { BoardView } from './ui/boardView';
 import {
   applyThemeChrome,
@@ -13,6 +21,7 @@ import './ui/styles.css';
 type PlayMode = 'local' | 'ai';
 
 const game = new ChessGame();
+const stockfish = new StockfishEngine();
 
 const statusEl = document.getElementById('status')!;
 const historyEl = document.getElementById('history')!;
@@ -22,15 +31,22 @@ const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement;
 const modeSelect = document.getElementById('mode-select') as HTMLSelectElement;
 const colorSelect = document.getElementById('color-select') as HTMLSelectElement;
 const colorLabel = document.getElementById('color-label') as HTMLLabelElement;
+const difficultySelect = document.getElementById(
+  'difficulty-select',
+) as HTMLSelectElement;
+const difficultyLabel = document.getElementById(
+  'difficulty-label',
+) as HTMLLabelElement;
 const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
 
 let board!: BoardView;
 
 let playMode: PlayMode = 'local';
 let humanColor: Color = 'w';
+let aiDifficulty: AiDifficulty = loadAiDifficulty();
 let aiThinking = false;
 let aiTimer: ReturnType<typeof setTimeout> | null = null;
-/** Generation counter so cancelled timers ignore stale callbacks. */
+/** Generation counter so cancelled timers / Stockfish searches ignore stale callbacks. */
 let aiGeneration = 0;
 
 function aiColor(): Color {
@@ -44,13 +60,14 @@ function isAiTurn(): boolean {
   return s.turn === aiColor();
 }
 
-function cancelAiTimer(): void {
+function cancelAi(): void {
   if (aiTimer != null) {
     clearTimeout(aiTimer);
     aiTimer = null;
   }
   aiGeneration += 1;
   aiThinking = false;
+  stockfish.cancel();
 }
 
 function currentTheme(): ThemeId {
@@ -129,6 +146,17 @@ function refreshChrome(): void {
   syncHumanInput();
 }
 
+function applyAiChoice(choice: AiMove | null): void {
+  if (choice) {
+    game.tryMove(choice.from, choice.to, choice.promotion);
+  }
+  aiThinking = false;
+  board.cancelPromotion();
+  board.clearSelection();
+  board.render();
+  refreshChrome();
+}
+
 function scheduleAiMove(): void {
   if (playMode !== 'ai' || !isAiTurn() || aiThinking) return;
 
@@ -136,6 +164,22 @@ function scheduleAiMove(): void {
   const gen = ++aiGeneration;
   refreshChrome();
   board.render();
+
+  if (aiDifficulty === 'master') {
+    const fen = game.fen();
+    void stockfish.getBestMove(fen).then((choice) => {
+      if (gen !== aiGeneration) return;
+      if (playMode !== 'ai' || !isAiTurn()) {
+        aiThinking = false;
+        refreshChrome();
+        board.render();
+        return;
+      }
+      // If Stockfish failed, fall back to weak so the game never stalls.
+      applyAiChoice(choice ?? chooseWeakMove(game));
+    });
+    return;
+  }
 
   aiTimer = setTimeout(() => {
     aiTimer = null;
@@ -147,20 +191,7 @@ function scheduleAiMove(): void {
       return;
     }
 
-    const choice = chooseWeakMove(game);
-    if (choice) {
-      game.tryMove(
-        choice.from,
-        choice.to,
-        choice.promotion ? 'q' : undefined,
-      );
-    }
-
-    aiThinking = false;
-    board.cancelPromotion();
-    board.clearSelection();
-    board.render();
-    refreshChrome();
+    applyAiChoice(chooseWeakMove(game));
   }, AI_THINK_MS);
 }
 
@@ -174,6 +205,8 @@ function updateModeUi(): void {
   const vsAi = playMode === 'ai';
   colorLabel.hidden = !vsAi;
   colorSelect.disabled = !vsAi;
+  difficultyLabel.hidden = !vsAi;
+  difficultySelect.disabled = !vsAi;
 }
 
 board = new BoardView(boardWrap, game, {
@@ -186,7 +219,7 @@ board = new BoardView(boardWrap, game, {
 });
 
 btnNew.addEventListener('click', () => {
-  cancelAiTimer();
+  cancelAi();
   board.cancelPromotion();
   game.reset();
   board.clearSelection();
@@ -198,7 +231,7 @@ btnNew.addEventListener('click', () => {
 btnUndo.addEventListener('click', () => {
   // Pending promo is not in chess.js yet — cancel UI only, do not undo.
   if (board.isPromotionPending()) {
-    cancelAiTimer();
+    cancelAi();
     board.cancelPromotion();
     board.render();
     refreshChrome();
@@ -207,7 +240,7 @@ btnUndo.addEventListener('click', () => {
 
   if (game.historySan().length === 0) return;
 
-  cancelAiTimer();
+  cancelAi();
 
   if (playMode === 'ai') {
     // Preferred: undo a full ply pair (human + AI).
@@ -233,7 +266,7 @@ btnUndo.addEventListener('click', () => {
 });
 
 modeSelect.addEventListener('change', () => {
-  cancelAiTimer();
+  cancelAi();
   board.cancelPromotion();
   playMode = modeSelect.value === 'ai' ? 'ai' : 'local';
   updateModeUi();
@@ -245,9 +278,21 @@ modeSelect.addEventListener('change', () => {
 });
 
 colorSelect.addEventListener('change', () => {
-  cancelAiTimer();
+  cancelAi();
   board.cancelPromotion();
   humanColor = colorSelect.value === 'b' ? 'b' : 'w';
+  game.reset();
+  board.clearSelection();
+  board.render();
+  refreshChrome();
+  scheduleAiMove();
+});
+
+difficultySelect.addEventListener('change', () => {
+  cancelAi();
+  board.cancelPromotion();
+  aiDifficulty = difficultySelect.value === 'master' ? 'master' : 'weak';
+  saveAiDifficulty(aiDifficulty);
   game.reset();
   board.clearSelection();
   board.render();
@@ -264,6 +309,8 @@ themeSelect.addEventListener('change', () => {
   syncColorOptionLabels();
   refreshChrome();
 });
+
+difficultySelect.value = aiDifficulty;
 
 const initialTheme = loadTheme();
 themeSelect.value = initialTheme;
