@@ -9,14 +9,14 @@ The repo ships **original placeholder SVGs** only — no Nintendo / The Pokémon
 |------|------|---------|----------|
 | White (Fire) | K | Charizard | `wK` |
 | White (Fire) | Q | Delphox | `wQ` |
-| White (Fire) | R | Coalossal | `wR` |
-| White (Fire) | B | Armarouge | `wB` |
+| White (Fire) | R | Magcargo | `wR` |
+| White (Fire) | B | Chandelure | `wB` |
 | White (Fire) | N | Rapidash | `wN` |
-| White (Fire) | P | Charcadet | `wP` |
+| White (Fire) | P | Fennekin | `wP` |
 | Black (Water) | K | Blastoise | `bK` |
-| Black (Water) | Q | Primarina | `bQ` |
-| Black (Water) | R | Drednaw | `bR` |
-| Black (Water) | B | Samurott (Unova) | `bB` |
+| Black (Water) | Q | Milotic | `bQ` |
+| Black (Water) | R | Carracosta | `bR` |
+| Black (Water) | B | Samurott | `bB` |
 | Black (Water) | N | Kingdra | `bN` |
 | Black (Water) | P | Froakie | `bP` |
 

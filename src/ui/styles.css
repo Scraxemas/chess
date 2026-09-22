@@ -307,34 +307,104 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* —— Pokémon theme board chrome (Fire sand vs Water slate) —— */
+/* —— Pokémon theme: Fire vs Water board + Poké Ball wallpaper —— */
 :root[data-theme='pokemon'] {
-  --light: #f3e0c2;
-  --dark: #5b7c99;
-  --selected: rgba(251, 191, 36, 0.55);
-  --last-move: rgba(56, 189, 248, 0.35);
-  --check: rgba(239, 68, 68, 0.5);
-  --bg: #f0f4f8;
+  --light: #f6b89a;
+  --dark: #1e5f74;
+  --selected: rgba(253, 224, 71, 0.62);
+  --last-move: rgba(125, 211, 252, 0.42);
+  --check: rgba(239, 68, 68, 0.55);
+  --bg: #eef2f7;
+  --panel: #ffffff;
   --border: #94a3b8;
+  --text: #0f172a;
+  --muted: #475569;
+}
+
+/* Subtle original Poké Ball pattern (not Nintendo art) — Pokémon theme only */
+html[data-theme='pokemon'] body {
+  background-color: #e8eef6;
+  background-image:
+    linear-gradient(180deg, rgba(254, 215, 170, 0.22) 0%, transparent 42%, rgba(186, 230, 253, 0.28) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%2394a3b8' stroke-width='1.25' opacity='0.28'%3E%3Ccircle cx='36' cy='36' r='14'/%3E%3Cpath d='M22 36h28'/%3E%3Ccircle cx='36' cy='36' r='4.5' fill='%2394a3b8' fill-opacity='0.2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto, 72px 72px;
+  background-attachment: fixed;
+}
+
+html[data-theme='classic'] body {
+  background: var(--bg);
+  background-image: none;
+}
+
+html[data-theme='pokemon'] .toolbar h1 {
+  background: linear-gradient(90deg, #ea580c 0%, #ea580c 48%, #0284c7 52%, #0284c7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme='pokemon'] .history-panel,
+html[data-theme='pokemon'] .mode-bar,
+html[data-theme='pokemon'] .toolbar {
+  border-radius: 10px;
+}
+
+html[data-theme='pokemon'] .history-panel {
+  background: linear-gradient(135deg, rgba(255, 247, 237, 0.92) 0%, rgba(239, 246, 255, 0.94) 100%);
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 0 rgba(234, 88, 12, 0.12), 0 0 0 1px rgba(2, 132, 199, 0.08);
+}
+
+html[data-theme='pokemon'] button:hover {
+  background: #fff7ed;
 }
 
 .board.theme-pokemon {
-  border-color: #334155;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25), 0 0 0 4px rgba(37, 99, 235, 0.2);
+  border-color: #0f3d4c;
+  box-shadow:
+    0 0 0 2px rgba(234, 88, 12, 0.35),
+    0 0 0 5px rgba(2, 132, 199, 0.28),
+    0 10px 28px rgba(15, 23, 42, 0.18);
 }
 
+/* Warm coral / fire light squares */
 .board.theme-pokemon .square.light {
-  background: linear-gradient(145deg, #f8e7c9 0%, #ecd4a8 100%);
+  background: linear-gradient(145deg, #fdc5a8 0%, #f4a07a 100%);
 }
 
+/* Deeper teal / water dark squares */
 .board.theme-pokemon .square.dark {
-  background: linear-gradient(145deg, #6b8eab 0%, #4a6d8c 100%);
+  background: linear-gradient(145deg, #2a7a8f 0%, #164e63 100%);
+}
+
+.board.theme-pokemon .square.light .coord {
+  color: #9a3412;
+}
+
+.board.theme-pokemon .square.dark .coord {
+  color: #e0f2fe;
 }
 
 .board.theme-pokemon .legal-dot::after {
-  background: rgba(15, 23, 42, 0.35);
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.board.theme-pokemon .square.dark .legal-dot::after {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .board.theme-pokemon .legal-capture::after {
-  box-shadow: inset 0 0 0 3px rgba(251, 191, 36, 0.75);
+  box-shadow: inset 0 0 0 3px rgba(253, 224, 71, 0.85);
+}
+
+.board.theme-pokemon .square.selected {
+  background-image: linear-gradient(var(--selected), var(--selected));
+}
+
+.board.theme-pokemon .square.last-move {
+  background-image: linear-gradient(var(--last-move), var(--last-move));
+}
+
+.board.theme-pokemon .square.in-check {
+  background-image: linear-gradient(var(--check), var(--check));
 }

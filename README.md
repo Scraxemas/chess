@@ -42,11 +42,11 @@ Preference is saved in `localStorage` (`chess-theme`).
 | Role | White (Fire) | Black (Water) |
 |------|--------------|---------------|
 | K | Charizard | Blastoise |
-| Q | Delphox | Primarina |
-| R | Coalossal | Drednaw |
-| B | Armarouge | Samurott (Unova) |
+| Q | Delphox | Milotic |
+| R | Magcargo | Carracosta |
+| B | Chandelure | Samurott |
 | N | Rapidash | Kingdra |
-| P | Charcadet | Froakie |
+| P | Fennekin | Froakie |
 
 Back ranks: **R N B Q K B N R** with those species.
 

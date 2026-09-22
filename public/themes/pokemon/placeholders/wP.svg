@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Charcadet">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fennekin">
   <defs>
-    <radialGradient id="g" cx="40%" cy="35%"><stop offset="0%" stop-color="#fb923c"/><stop offset="100%" stop-color="#dc2626"/></radialGradient>
+    <radialGradient id="g" cx="40%" cy="35%"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#ea580c"/></radialGradient>
   </defs>
-  <circle cx="32" cy="32" r="26" fill="url(#g)" stroke="#991b1b" stroke-width="2.5"/>
-  <path d="M32 14 L36 28 L50 28 L39 36 L43 50 L32 42 L21 50 L25 36 L14 28 L28 28 Z" fill="#fef3c7" opacity="0.95"/>
-  <text x="32" y="58" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="#fff">Charcadet</text>
+  <circle cx="32" cy="34" r="20" fill="url(#g)" stroke="#9a3412" stroke-width="2.5"/>
+  <path d="M18 22 L14 6 L26 18 Z" fill="#fbbf24" stroke="#9a3412" stroke-width="1.5"/>
+  <path d="M46 22 L50 6 L38 18 Z" fill="#fbbf24" stroke="#9a3412" stroke-width="1.5"/>
+  <path d="M16 14 L18 8" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M48 14 L46 8" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+  <text x="32" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#7c2d12">FEN</text>
+  <text x="32" y="56" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" fill="#fff">Fennekin</text>
 </svg>

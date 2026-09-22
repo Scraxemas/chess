@@ -18,17 +18,17 @@ export function pieceKey(color: Color, type: PieceSymbol): string {
   return `${prefix}${map[type]}`;
 }
 
-/** White = Fire (Red), Black = Water (Blue). */
+/** White = Fire (Red), Black = Water (Blue). Gen 1–6 only. */
 export const POKEMON_SPECIES: Record<string, string> = {
   wK: 'Charizard',
   wQ: 'Delphox',
-  wR: 'Coalossal',
-  wB: 'Armarouge',
+  wR: 'Magcargo',
+  wB: 'Chandelure',
   wN: 'Rapidash',
-  wP: 'Charcadet',
+  wP: 'Fennekin',
   bK: 'Blastoise',
-  bQ: 'Primarina',
-  bR: 'Drednaw',
+  bQ: 'Milotic',
+  bR: 'Carracosta',
   bB: 'Samurott',
   bN: 'Kingdra',
   bP: 'Froakie',
