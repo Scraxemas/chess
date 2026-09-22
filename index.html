@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="toolbar">
+        <h1>Chess</h1>
+        <div class="actions">
+          <button type="button" id="btn-new">New Game</button>
+          <button type="button" id="btn-undo">Undo</button>
+        </div>
+      </header>
+      <p id="status" class="status" aria-live="polite"></p>
+      <div id="board-wrap" class="board-wrap"></div>
+      <aside class="history-panel">
+        <h2>Moves</h2>
+        <ol id="history" class="history"></ol>
+      </aside>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
