@@ -14,6 +14,22 @@
           <button type="button" id="btn-undo">Undo</button>
         </div>
       </header>
+      <div class="mode-bar">
+        <label class="mode-field">
+          Mode
+          <select id="mode-select" aria-label="Play mode">
+            <option value="local">Local 2-player</option>
+            <option value="ai">Play vs AI</option>
+          </select>
+        </label>
+        <label class="mode-field" id="color-label" hidden>
+          You play
+          <select id="color-select" aria-label="Your color">
+            <option value="w" selected>White</option>
+            <option value="b">Black</option>
+          </select>
+        </label>
+      </div>
       <p id="status" class="status" aria-live="polite"></p>
       <div id="board-wrap" class="board-wrap"></div>
       <aside class="history-panel">

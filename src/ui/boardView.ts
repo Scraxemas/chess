@@ -35,6 +35,8 @@ export class BoardView {
   private legalTargets = new Map<Square, Move>();
   private pendingPromo: { from: Square; to: Square } | null = null;
   private interactionLocked = false;
+  /** When false, human clicks are ignored (AI turn / thinking). */
+  private humanInputEnabled = true;
 
   constructor(
     root: HTMLElement,
@@ -66,12 +68,29 @@ export class BoardView {
     this.boardEl.addEventListener('click', (e) => this.onBoardClick(e));
   }
 
+  /** Enable/disable human board interaction (used during AI turns). */
+  setHumanInputEnabled(enabled: boolean): void {
+    this.humanInputEnabled = enabled;
+    if (!enabled) {
+      this.clearSelection();
+      // Do not dismiss an open promotion picker mid-choice.
+      if (!this.pendingPromo) {
+        this.render();
+      }
+    }
+  }
+
+  isHumanInputEnabled(): boolean {
+    return this.humanInputEnabled;
+  }
+
   render(): void {
     const board = this.game.board();
     const last = this.game.lastMove();
     const checkSq = this.game.checkedKingSquare();
 
     this.boardEl.replaceChildren();
+    this.boardEl.classList.toggle('input-disabled', !this.humanInputEnabled);
 
     for (let r = 0; r < 8; r++) {
       for (let f = 0; f < 8; f++) {
@@ -132,7 +151,13 @@ export class BoardView {
   }
 
   private onBoardClick(e: MouseEvent): void {
-    if (this.interactionLocked || this.pendingPromo) return;
+    if (
+      !this.humanInputEnabled ||
+      this.interactionLocked ||
+      this.pendingPromo
+    ) {
+      return;
+    }
 
     const target = (e.target as HTMLElement).closest('.square') as
       | HTMLElement

@@ -47,6 +47,11 @@ export class ChessGame {
     return this.chess.moves({ square: from, verbose: true });
   }
 
+  /** All legal moves in the current position (verbose). */
+  allMoves(): Move[] {
+    return this.chess.moves({ verbose: true });
+  }
+
   isPromotionMove(from: Square, to: Square): boolean {
     const moves = this.movesFrom(from).filter((m) => m.to === to);
     return moves.some((m) => m.promotion != null);

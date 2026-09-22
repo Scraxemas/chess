@@ -266,3 +266,43 @@ button:active {
   break-inside: avoid;
   margin-bottom: 0.15rem;
 }
+
+.mode-bar {
+  width: 100%;
+  max-width: min(90vw, 560px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.mode-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+}
+
+.mode-field select {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.board.input-disabled {
+  cursor: wait;
+}
+
+.board.input-disabled .square {
+  cursor: wait;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
