@@ -52,8 +52,16 @@ export function pokemonPlaceholderUrl(color: Color, type: PieceSymbol): string {
   return `/themes/pokemon/placeholders/${pieceKey(color, type)}.svg`;
 }
 
+/** Chess color labels: Classic White/Black, Pokémon Fire/Water. */
+export function sideLabel(theme: ThemeId, color: Color): string {
+  if (theme === 'pokemon') {
+    return color === 'w' ? 'Fire' : 'Water';
+  }
+  return color === 'w' ? 'White' : 'Black';
+}
+
 export function pieceAlt(theme: ThemeId, color: Color, type: PieceSymbol): string {
-  const side = color === 'w' ? 'White' : 'Black';
+  const side = sideLabel(theme, color);
   if (theme === 'pokemon') {
     return `${side} ${pokemonSpecies(color, type)}`;
   }

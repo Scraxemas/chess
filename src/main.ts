@@ -5,6 +5,7 @@ import {
   applyThemeChrome,
   loadTheme,
   saveTheme,
+  sideLabel,
   type ThemeId,
 } from './ui/themes';
 import './ui/styles.css';
@@ -52,13 +53,30 @@ function cancelAiTimer(): void {
   aiThinking = false;
 }
 
+function currentTheme(): ThemeId {
+  return themeSelect.value === 'pokemon' ? 'pokemon' : 'classic';
+}
+
+function syncColorOptionLabels(): void {
+  const theme = currentTheme();
+  for (const opt of Array.from(colorSelect.options)) {
+    if (opt.value === 'w') opt.textContent = sideLabel(theme, 'w');
+    if (opt.value === 'b') opt.textContent = sideLabel(theme, 'b');
+  }
+  colorSelect.setAttribute(
+    'aria-label',
+    theme === 'pokemon' ? 'Your team' : 'Your color',
+  );
+}
+
 function formatStatus(): string {
   if (aiThinking) return 'AI thinking…';
 
+  const theme = currentTheme();
   const s = game.status();
   switch (s.kind) {
     case 'playing': {
-      const side = s.turn === 'w' ? 'White' : 'Black';
+      const side = sideLabel(theme, s.turn);
       const vsAi =
         playMode === 'ai'
           ? s.turn === humanColor
@@ -70,7 +88,7 @@ function formatStatus(): string {
         : `${side} to move${vsAi}`;
     }
     case 'checkmate': {
-      const winner = s.winner === 'w' ? 'White' : 'Black';
+      const winner = sideLabel(theme, s.winner);
       return `Checkmate — ${winner} wins`;
     }
     case 'stalemate':
@@ -241,7 +259,9 @@ themeSelect.addEventListener('change', () => {
   const theme: ThemeId =
     themeSelect.value === 'pokemon' ? 'pokemon' : 'classic';
   saveTheme(theme);
+  applyThemeChrome(theme);
   board.setTheme(theme);
+  syncColorOptionLabels();
   refreshChrome();
 });
 
@@ -249,6 +269,7 @@ const initialTheme = loadTheme();
 themeSelect.value = initialTheme;
 applyThemeChrome(initialTheme);
 board.setTheme(initialTheme);
+syncColorOptionLabels();
 
 updateModeUi();
 board.render();
