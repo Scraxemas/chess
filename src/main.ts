@@ -16,6 +16,8 @@ const modeSelect = document.getElementById('mode-select') as HTMLSelectElement;
 const colorSelect = document.getElementById('color-select') as HTMLSelectElement;
 const colorLabel = document.getElementById('color-label') as HTMLLabelElement;
 
+let board!: BoardView;
+
 let playMode: PlayMode = 'local';
 let humanColor: Color = 'w';
 let aiThinking = false;
@@ -95,7 +97,10 @@ function syncHumanInput(): void {
 function refreshChrome(): void {
   statusEl.textContent = formatStatus();
   renderHistory();
-  btnUndo.disabled = game.historySan().length === 0 || aiThinking;
+  const promoPending = board.isPromotionPending();
+  btnNew.disabled = promoPending;
+  btnUndo.disabled =
+    promoPending || game.historySan().length === 0 || aiThinking;
   syncHumanInput();
 }
 
@@ -127,6 +132,7 @@ function scheduleAiMove(): void {
     }
 
     aiThinking = false;
+    board.cancelPromotion();
     board.clearSelection();
     board.render();
     refreshChrome();
@@ -145,14 +151,18 @@ function updateModeUi(): void {
   colorSelect.disabled = !vsAi;
 }
 
-const board = new BoardView(boardWrap, game, {
+board = new BoardView(boardWrap, game, {
   onMoveCommitted: () => {
     afterHumanMove();
+  },
+  onUiStateChanged: () => {
+    refreshChrome();
   },
 });
 
 btnNew.addEventListener('click', () => {
   cancelAiTimer();
+  board.cancelPromotion();
   game.reset();
   board.clearSelection();
   board.render();
@@ -161,6 +171,15 @@ btnNew.addEventListener('click', () => {
 });
 
 btnUndo.addEventListener('click', () => {
+  // Pending promo is not in chess.js yet — cancel UI only, do not undo.
+  if (board.isPromotionPending()) {
+    cancelAiTimer();
+    board.cancelPromotion();
+    board.render();
+    refreshChrome();
+    return;
+  }
+
   if (game.historySan().length === 0) return;
 
   cancelAiTimer();
@@ -180,6 +199,7 @@ btnUndo.addEventListener('click', () => {
     game.undo();
   }
 
+  board.cancelPromotion();
   board.clearSelection();
   board.render();
   refreshChrome();
@@ -188,6 +208,7 @@ btnUndo.addEventListener('click', () => {
 
 modeSelect.addEventListener('change', () => {
   cancelAiTimer();
+  board.cancelPromotion();
   playMode = modeSelect.value === 'ai' ? 'ai' : 'local';
   updateModeUi();
   game.reset();
@@ -199,6 +220,7 @@ modeSelect.addEventListener('change', () => {
 
 colorSelect.addEventListener('change', () => {
   cancelAiTimer();
+  board.cancelPromotion();
   humanColor = colorSelect.value === 'b' ? 'b' : 'w';
   game.reset();
   board.clearSelection();

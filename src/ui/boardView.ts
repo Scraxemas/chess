@@ -21,6 +21,8 @@ function pieceSrc(color: Color, type: PieceSymbol): string {
 
 export type BoardViewCallbacks = {
   onMoveCommitted: () => void;
+  /** Fired when promo overlay opens/closes. */
+  onUiStateChanged?: () => void;
 };
 
 export class BoardView {
@@ -150,6 +152,21 @@ export class BoardView {
     this.legalTargets.clear();
   }
 
+  isPromotionPending(): boolean {
+    return this.pendingPromo != null;
+  }
+
+  /** Clears pending promotion UI/lock without touching chess.js. */
+  cancelPromotion(): void {
+    const wasPending = this.pendingPromo != null || !this.promoOverlay.hidden;
+    this.pendingPromo = null;
+    this.interactionLocked = false;
+    this.promoOverlay.hidden = true;
+    this.promoChoices.replaceChildren();
+    this.clearSelection();
+    if (wasPending) this.callbacks.onUiStateChanged?.();
+  }
+
   private onBoardClick(e: MouseEvent): void {
     if (
       !this.humanInputEnabled ||
@@ -229,18 +246,21 @@ export class BoardView {
     }
 
     this.promoOverlay.hidden = false;
+    this.callbacks.onUiStateChanged?.();
   }
 
   private commitPromotion(piece: PieceSymbol): void {
     if (!this.pendingPromo) return;
     const { from, to } = this.pendingPromo;
     const move = this.game.tryMove(from, to, piece);
+    // Always clear promo UI/lock, even if tryMove fails.
     this.pendingPromo = null;
     this.interactionLocked = false;
     this.promoOverlay.hidden = true;
     this.promoChoices.replaceChildren();
     this.clearSelection();
     this.render();
+    this.callbacks.onUiStateChanged?.();
     if (move) this.callbacks.onMoveCommitted();
   }
 }
