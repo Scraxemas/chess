@@ -2,7 +2,7 @@ import type { Square } from 'chess.js';
 import type { AiMove } from './ai';
 
 /** Served from Vite `public/` (stable URL; companion .wasm resolves beside the .js). */
-const STOCKFISH_WORKER_URL = '/stockfish/stockfish-19-lite-single.js';
+const STOCKFISH_WORKER_URL = `${import.meta.env.BASE_URL}stockfish/stockfish-19-lite-single.js`;
 
 /** High strength: max Skill Level + ~1s think time. */
 const MASTER_SKILL = 20;

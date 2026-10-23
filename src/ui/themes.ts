@@ -4,6 +4,9 @@ export type ThemeId = 'classic' | 'pokemon';
 
 export const THEME_STORAGE_KEY = 'chess-theme';
 
+const assetUrl = (path: string): string =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
+
 /** Chess piece letter used in asset filenames (wK, bP, …). */
 export function pieceKey(color: Color, type: PieceSymbol): string {
   const prefix = color === 'w' ? 'w' : 'b';
@@ -39,17 +42,17 @@ export function pokemonSpecies(color: Color, type: PieceSymbol): string {
 }
 
 export function classicPieceUrl(color: Color, type: PieceSymbol): string {
-  return `/pieces/${pieceKey(color, type)}.svg`;
+  return assetUrl(`/pieces/${pieceKey(color, type)}.svg`);
 }
 
 /** Preferred Trozei-style drop-in (gitignored); may 404 until user adds files. */
 export function pokemonTrozeiUrl(color: Color, type: PieceSymbol): string {
-  return `/themes/pokemon/trozei/${pieceKey(color, type)}.png`;
+  return assetUrl(`/themes/pokemon/trozei/${pieceKey(color, type)}.png`);
 }
 
 /** Original placeholder shipped in the repo. */
 export function pokemonPlaceholderUrl(color: Color, type: PieceSymbol): string {
-  return `/themes/pokemon/placeholders/${pieceKey(color, type)}.svg`;
+  return assetUrl(`/themes/pokemon/placeholders/${pieceKey(color, type)}.svg`);
 }
 
 /** Chess color labels: Classic White/Black, Pokémon Fire/Water. */
